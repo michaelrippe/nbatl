@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Team League 2025 - LIVE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #17408B;
+            --secondary: #1d428a;
+            --accent: #C9082A;
+            --accent-bright: #ff1744;
+            --text: #f0f0f0;
+            --text-muted: #8a9bb3;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --card-bg: rgba(29, 66, 138, 0.6);
+            --glass: rgba(255, 255, 255, 0.05);
+            --orange: #F58426;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Barlow', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(201, 8, 42, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(29, 66, 138, 0.8) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            border-bottom: 3px solid var(--accent);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 4px 20px rgba(201, 8, 42, 0.4);
+            border: 3px solid var(--orange);
+        }
+
+        .logo h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo h1 span {
+            color: var(--accent);
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        nav {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            font-family: 'Barlow', sans-serif;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        nav button.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        nav button:not(.active) {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav button:hover:not(.active) {
+            background: rgba(201, 8, 42, 0.2);
+            border-color: var(--accent);
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+        }
+
+        .last-updated {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .prize-pool {
+            background: linear-gradient(135deg, var(--accent) 0%, #8B0000 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prize-pool::before {
+            content: '🏀';
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 6rem;
+            opacity: 0.2;
+        }
+
+        .prize-item {
+            text-align: center;
+            color: white;
+        }
+
+        .prize-item h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .prize-item .amount {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .prize-item .detail {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .standings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .player-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-card.leader::before {
+            content: '👑';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+
+        .player-header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .player-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .player-rank {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .player-stats {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--orange);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .player-teams {
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .team-chip {
+            background: var(--glass);
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .team-chip.best {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .team-chip.worst {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .team-record {
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .team-record.positive { color: var(--success); }
+        .team-record.negative { color: var(--danger); }
+
+        .team-logo {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .team-name-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Payments */
+        .payments-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .payments-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            color: var(--orange);
+        }
+
+        .venmo-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(0, 140, 255, 0.1);
+            border: 1px solid rgba(0, 140, 255, 0.3);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .venmo-info .venmo-username {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.2rem;
+            color: #008CFF;
+        }
+
+        .pay-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            background: #008CFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .pay-btn:hover {
+            background: #0070CC;
+            transform: translateY(-2px);
+        }
+
+        .player-payment-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .payment-badge.paid {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .payment-badge.unpaid {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .mark-paid-btn {
+            padding: 0.4rem 0.75rem;
+            background: var(--glass);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mark-paid-btn:hover {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* NBA Standings Table */
+        .standings-table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .standings-table th,
+        .standings-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .standings-table th {
+            background: var(--secondary);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            color: var(--orange);
+        }
+
+        .standings-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .standings-table .team-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .standings-table .team-cell img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .standings-table .owner-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Settings */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .settings-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            color: var(--orange);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-bright);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--glass);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1001;
+        }
+
+        .toast {
+            background: var(--secondary);
+            border: 1px solid var(--accent);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 1rem; }
+            .logo h1 { font-size: 1.5rem; }
+            .logo-icon { width: 45px; height: 45px; font-size: 1rem; }
+            nav button { padding: 0.5rem 1rem; font-size: 0.75rem; }
+            main { padding: 1rem; }
+            .section-header h2 { font-size: 1.8rem; }
+            .settings-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">NBA</div>
+                <div>
+                    <h1>NBA Team League <span>2025</span></h1>
+                    <span class="live-badge">LIVE DATA</span>
+                </div>
+            </div>
+            <nav>
+                <button class="active" data-section="standings">Standings</button>
+                <button data-section="payments">Payments</button>
+                <button data-section="nba">NBA Standings</button>
+                <button data-section="settings">Settings</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Standings Section -->
+        <section id="standings" class="section active">
+            <div class="section-header">
+                <h2>League Standings</h2>
+                <div>
+                    <span class="last-updated" id="last-updated">Loading...</span>
+                    <button class="btn-secondary" style="padding: 0.5rem 1rem; margin-left: 1rem;" onclick="refreshData()">↻ Refresh</button>
+                </div>
+            </div>
+
+            <div class="prize-pool">
+                <div class="prize-item">
+                    <h3>Reg Season Entry</h3>
+                    <div class="amount">$50</div>
+                    <div class="detail">Winner gets $150</div>
+                </div>
+                <div class="prize-item">
+                    <h3>In-Season Champ</h3>
+                    <div class="amount">$25</div>
+                    <div class="detail">Winner gets $75</div>
+                </div>
+                <div class="prize-item">
+                    <h3>NBA Finals Champ</h3>
+                    <div class="amount">$25</div>
+                    <div class="detail">Winner gets $75</div>
+                </div>
+                <div class="prize-item">
+                    <h3>Defending Champ</h3>
+                    <div class="amount">🏆</div>
+                    <div class="detail">Rippe</div>
+                </div>
+            </div>
+
+            <div id="standings-loading" class="loading">
+                <div class="loading-spinner"></div>
+                <span>Loading live standings...</span>
+            </div>
+
+            <div class="standings-grid" id="standings-grid" style="display: none;">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="payments" class="section">
+            <div class="section-header">
+                <h2>Entry Payments</h2>
+            </div>
+
+            <div class="payments-card">
+                <h3>💰 Pay Commissioner</h3>
+                <div class="venmo-info">
+                    <span style="font-size: 1.5rem;">💳</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Commissioner Venmo</div>
+                        <div class="venmo-username">@michaelrippe</div>
+                    </div>
+                    <a href="https://venmo.com/michaelrippe" target="_blank" class="pay-btn">Open Venmo</a>
+                </div>
+
+                <h4 style="font-family: 'Oswald', sans-serif; margin-bottom: 1rem; color: var(--text-muted);">PLAYER PAYMENT STATUS</h4>
+                <div id="payment-status-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="prize-pool">
+                <div class="prize-item">
+                    <h3>Reg Season</h3>
+                    <div class="amount">$50</div>
+                    <div class="detail">Required to Draft</div>
+                </div>
+                <div class="prize-item">
+                    <h3>In-Season Tourney</h3>
+                    <div class="amount">$25</div>
+                    <div class="detail">Optional Side Bet</div>
+                </div>
+                <div class="prize-item">
+                    <h3>NBA Finals</h3>
+                    <div class="amount">$25</div>
+                    <div class="detail">Optional Side Bet</div>
+                </div>
+                <div class="prize-item">
+                    <h3>Total Pool</h3>
+                    <div class="amount" id="total-pool">$0</div>
+                    <div class="detail">Collected So Far</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NBA Standings Section -->
+        <section id="nba" class="section">
+            <div class="section-header">
+                <h2>NBA Standings</h2>
+                <span class="last-updated" id="nba-last-updated"></span>
+            </div>
+
+            <div id="nba-loading" class="loading">
+                <div class="loading-spinner"></div>
+                <span>Loading NBA standings...</span>
+            </div>
+
+            <div class="standings-table-container" id="nba-table-container" style="display: none;">
+                <table class="standings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            <th>Record</th>
+                            <th>PCT</th>
+                            <th>Owner</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nba-standings-body">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="section">
+            <div class="section-header">
+                <h2>League Settings</h2>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>🔄 Data Source</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        This site pulls live data from ESPN's API. Standings update automatically every time you visit or refresh.
+                    </p>
+                    <button class="btn btn-primary" onclick="refreshData()">Refresh Data Now</button>
+                </div>
+
+                <div class="settings-card">
+                    <h3>📋 Team Assignments</h3>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+                        Team assignments are locked for the 2024-25 season. Contact the commissioner to make changes.
+                    </p>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                        <div><strong style="color: var(--orange);">Gainzy:</strong> Thunder, Timberwolves, Magic, Pistons, Grizzlies, Kings, Suns</div>
+                        <div style="margin-top: 0.5rem;"><strong style="color: var(--orange);">Rippe:</strong> Nuggets, Clippers, Spurs, Bucks, Celtics, Bulls, Pelicans</div>
+                        <div style="margin-top: 0.5rem;"><strong style="color: var(--orange);">Swaggy:</strong> Cavaliers, Lakers, Warriors, 76ers, Heat, Pacers, Nets</div>
+                        <div style="margin-top: 0.5rem;"><strong style="color: var(--orange);">G$:</strong> Knicks, Rockets, Hawks, Mavericks, Raptors, Blazers, Hornets</div>
+                        <div style="margin-top: 0.5rem;"><strong style="color: var(--text-muted);">Undrafted:</strong> Jazz, Wizards</div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>💾 Export/Import</h3>
+                    <button class="btn btn-secondary" onclick="exportPayments()">Export Payment Data</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">Import Payment Data</button>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importPayments(event)">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Team ownership mapping (locked for season)
+        const teamOwnership = {
+            'Oklahoma City Thunder': 'Gainzy',
+            'Minnesota Timberwolves': 'Gainzy',
+            'Orlando Magic': 'Gainzy',
+            'Detroit Pistons': 'Gainzy',
+            'Memphis Grizzlies': 'Gainzy',
+            'Sacramento Kings': 'Gainzy',
+            'Phoenix Suns': 'Gainzy',
+            'Denver Nuggets': 'Rippe',
+            'LA Clippers': 'Rippe',
+            'San Antonio Spurs': 'Rippe',
+            'Milwaukee Bucks': 'Rippe',
+            'Boston Celtics': 'Rippe',
+            'Chicago Bulls': 'Rippe',
+            'New Orleans Pelicans': 'Rippe',
+            'Cleveland Cavaliers': 'Swaggy',
+            'Los Angeles Lakers': 'Swaggy',
+            'Golden State Warriors': 'Swaggy',
+            'Philadelphia 76ers': 'Swaggy',
+            'Miami Heat': 'Swaggy',
+            'Indiana Pacers': 'Swaggy',
+            'Brooklyn Nets': 'Swaggy',
+            'New York Knicks': 'G$',
+            'Houston Rockets': 'G$',
+            'Atlanta Hawks': 'G$',
+            'Dallas Mavericks': 'G$',
+            'Toronto Raptors': 'G$',
+            'Portland Trail Blazers': 'G$',
+            'Charlotte Hornets': 'G$'
+        };
+
+        const players = ['Gainzy', 'Rippe', 'Swaggy', 'G$'];
+        
+        const playerColors = {
+            'Gainzy': 'rgba(201, 8, 42, 0.8)',
+            'Rippe': 'rgba(245, 132, 38, 0.8)',
+            'Swaggy': 'rgba(29, 66, 138, 0.8)',
+            'G$': 'rgba(34, 197, 94, 0.8)'
+        };
+
+        // State for payments (stored locally)
+        let payments = JSON.parse(localStorage.getItem('nbaLeaguePayments')) || {
+            'Gainzy': { seasonPaid: false, istPaid: false, finalsPaid: false },
+            'Rippe': { seasonPaid: false, istPaid: false, finalsPaid: false },
+            'Swaggy': { seasonPaid: false, istPaid: false, finalsPaid: false },
+            'G$': { seasonPaid: false, istPaid: false, finalsPaid: false }
+        };
+
+        // Live NBA data cache
+        let nbaTeams = [];
+
+        // Navigation
+        document.querySelectorAll('nav button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(btn.dataset.section).classList.add('active');
+            });
+        });
+
+        // Fetch live NBA standings from ESPN API
+        async function fetchNBAStandings() {
+            try {
+                const response = await fetch('https://site.api.espn.com/apis/v2/sports/basketball/nba/standings');
+                const data = await response.json();
+                
+                nbaTeams = [];
+                
+                // Parse the standings data
+                if (data.children) {
+                    data.children.forEach(conference => {
+                        if (conference.standings && conference.standings.entries) {
+                            conference.standings.entries.forEach(entry => {
+                                const team = entry.team;
+                                const stats = {};
+                                
+                                entry.stats.forEach(stat => {
+                                    stats[stat.name] = stat.value;
+                                });
+                                
+                                nbaTeams.push({
+                                    name: team.displayName,
+                                    shortName: team.shortDisplayName,
+                                    abbreviation: team.abbreviation,
+                                    logo: team.logos?.[0]?.href || '',
+                                    wins: stats.wins || 0,
+                                    losses: stats.losses || 0,
+                                    pct: stats.winPercent || 0,
+                                    record: `${stats.wins || 0}-${stats.losses || 0}`
+                                });
+                            });
+                        }
+                    });
+                }
+                
+                // Sort by wins descending
+                nbaTeams.sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+                
+                return nbaTeams;
+            } catch (error) {
+                console.error('Error fetching NBA standings:', error);
+                // Fallback: try alternate endpoint
+                try {
+                    const response = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams');
+                    const data = await response.json();
+                    
+                    nbaTeams = data.sports[0].leagues[0].teams.map(t => ({
+                        name: t.team.displayName,
+                        shortName: t.team.shortDisplayName,
+                        abbreviation: t.team.abbreviation,
+                        logo: t.team.logos?.[0]?.href || '',
+                        wins: 0,
+                        losses: 0,
+                        pct: 0,
+                        record: '0-0'
+                    }));
+                    
+                    return nbaTeams;
+                } catch (err) {
+                    console.error('Fallback also failed:', err);
+                    return [];
+                }
+            }
+        }
+
+        // Render league standings
+        function renderStandings() {
+            const grid = document.getElementById('standings-grid');
+            const loading = document.getElementById('standings-loading');
+            
+            if (nbaTeams.length === 0) {
+                loading.innerHTML = '<div class="error-message">Unable to load NBA data. Please try refreshing.</div>';
+                return;
+            }
+            
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+            
+            // Calculate player stats
+            const playerStats = players.map(player => {
+                const teams = nbaTeams.filter(team => teamOwnership[team.name] === player);
+                const totalWins = teams.reduce((sum, t) => sum + t.wins, 0);
+                
+                return {
+                    name: player,
+                    teams: teams.sort((a, b) => b.wins - a.wins),
+                    totalWins,
+                    bestTeam: teams.reduce((best, t) => t.wins > (best?.wins || 0) ? t : best, null),
+                    worstTeam: teams.reduce((worst, t) => t.wins < (worst?.wins || 999) ? t : worst, null)
+                };
+            }).sort((a, b) => b.totalWins - a.totalWins);
+
+            grid.innerHTML = playerStats.map((player, index) => {
+                const isPaid = payments[player.name]?.seasonPaid;
+                
+                return `
+                <div class="player-card ${index === 0 ? 'leader' : ''}">
+                    <div class="player-header">
+                        <span class="player-name">${player.name}</span>
+                        <span class="player-rank">${index + 1}</span>
+                    </div>
+                    <div style="padding: 0.5rem 1.5rem;">
+                        <span class="payment-badge ${isPaid ? 'paid' : 'unpaid'}">
+                            ${isPaid ? '✓ PAID' : '✗ UNPAID'}
+                        </span>
+                    </div>
+                    <div class="player-stats">
+                        <div class="stat">
+                            <div class="stat-value">${player.totalWins}</div>
+                            <div class="stat-label">Total Wins</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${player.teams.length}</div>
+                            <div class="stat-label">Teams</div>
+                        </div>
+                    </div>
+                    <div class="player-teams">
+                        ${player.teams.map(team => {
+                            const isBest = team === player.bestTeam;
+                            const isWorst = team === player.worstTeam;
+                            return `
+                                <div class="team-chip ${isBest ? 'best' : ''} ${isWorst ? 'worst' : ''}">
+                                    <span class="team-name-logo">
+                                        <img src="${team.logo}" class="team-logo" onerror="this.style.display='none'">
+                                        ${team.shortName}
+                                    </span>
+                                    <span class="team-record ${team.wins >= team.losses ? 'positive' : 'negative'}">${team.record}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `}).join('');
+            
+            // Update last updated time
+            document.getElementById('last-updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        // Render NBA standings table
+        function renderNBAStandings() {
+            const tbody = document.getElementById('nba-standings-body');
+            const loading = document.getElementById('nba-loading');
+            const container = document.getElementById('nba-table-container');
+            
+            if (nbaTeams.length === 0) {
+                loading.innerHTML = '<div class="error-message">Unable to load NBA data.</div>';
+                return;
+            }
+            
+            loading.style.display = 'none';
+            container.style.display = 'block';
+            
+            tbody.innerHTML = nbaTeams.map((team, index) => {
+                const owner = teamOwnership[team.name];
+                
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                            <div class="team-cell">
+                                <img src="${team.logo}" onerror="this.style.display='none'">
+                                <span>${team.name}</span>
+                            </div>
+                        </td>
+                        <td><strong>${team.record}</strong></td>
+                        <td>${team.pct.toFixed(3)}</td>
+                        <td>
+                            ${owner ? `<span class="owner-badge" style="background: ${playerColors[owner]}">${owner}</span>` : '<span style="color: var(--text-muted);">-</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            document.getElementById('nba-last-updated').textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        // Render payments
+        function renderPayments() {
+            const container = document.getElementById('payment-status-list');
+            
+            container.innerHTML = players.map(player => {
+                const payment = payments[player] || { seasonPaid: false, istPaid: false, finalsPaid: false };
+                
+                return `
+                    <div class="player-payment-row">
+                        <div>
+                            <div style="font-family: 'Oswald', sans-serif; font-size: 1.1rem; text-transform: uppercase;">${player}</div>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                <span class="payment-badge ${payment.seasonPaid ? 'paid' : 'unpaid'}">
+                                    ${payment.seasonPaid ? '✓ Season' : '✗ Season'}
+                                </span>
+                                <span class="payment-badge ${payment.istPaid ? 'paid' : 'unpaid'}">
+                                    ${payment.istPaid ? '✓ IST' : '✗ IST'}
+                                </span>
+                                <span class="payment-badge ${payment.finalsPaid ? 'paid' : 'unpaid'}">
+                                    ${payment.finalsPaid ? '✓ Finals' : '✗ Finals'}
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="mark-paid-btn" onclick="togglePayment('${player}', 'seasonPaid')">
+                                ${payment.seasonPaid ? 'Unmark' : 'Mark'} Season
+                            </button>
+                            <button class="mark-paid-btn" onclick="togglePayment('${player}', 'istPaid')">
+                                ${payment.istPaid ? 'Unmark' : 'Mark'} IST
+                            </button>
+                            <button class="mark-paid-btn" onclick="togglePayment('${player}', 'finalsPaid')">
+                                ${payment.finalsPaid ? 'Unmark' : 'Mark'} Finals
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update total pool
+            let total = 0;
+            players.forEach(player => {
+                const p = payments[player] || {};
+                if (p.seasonPaid) total += 50;
+                if (p.istPaid) total += 25;
+                if (p.finalsPaid) total += 25;
+            });
+            document.getElementById('total-pool').textContent = `$${total}`;
+        }
+
+        // Toggle payment
+        function togglePayment(player, type) {
+            if (!payments[player]) {
+                payments[player] = { seasonPaid: false, istPaid: false, finalsPaid: false };
+            }
+            payments[player][type] = !payments[player][type];
+            localStorage.setItem('nbaLeaguePayments', JSON.stringify(payments));
+            renderPayments();
+            renderStandings();
+            showToast(`${player} ${type.replace('Paid', '')} payment ${payments[player][type] ? 'confirmed' : 'removed'}`);
+        }
+
+        // Export payments
+        function exportPayments() {
+            const data = JSON.stringify(payments, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nba-league-payments.json';
+            a.click();
+            showToast('Payment data exported!');
+        }
+
+        // Import payments
+        function importPayments(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        payments = JSON.parse(e.target.result);
+                        localStorage.setItem('nbaLeaguePayments', JSON.stringify(payments));
+                        renderPayments();
+                        renderStandings();
+                        showToast('Payment data imported!');
+                    } catch (err) {
+                        showToast('Invalid file format');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Refresh data
+        async function refreshData() {
+            document.getElementById('standings-loading').style.display = 'flex';
+            document.getElementById('standings-grid').style.display = 'none';
+            document.getElementById('nba-loading').style.display = 'flex';
+            document.getElementById('nba-table-container').style.display = 'none';
+            
+            await fetchNBAStandings();
+            renderStandings();
+            renderNBAStandings();
+            showToast('Data refreshed!');
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Initialize
+        async function init() {
+            await fetchNBAStandings();
+            renderStandings();
+            renderNBAStandings();
+            renderPayments();
+        }
+
+        init();
+    </script>
+</body>
+</html>
