@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NBA Team League 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#F8F7F4;color:#1A1A1A;-webkit-font-smoothing:antialiased}
+
+/* Ticker */
+.ticker-wrap{background:#111;overflow:hidden;height:36px;position:relative;border-bottom:1px solid #2a2a2a}
+.ticker{display:flex;animation:scroll 50s linear infinite;white-space:nowrap;align-items:center;height:36px}
+.ticker:hover{animation-play-state:paused}
+.ticker-item{padding:0 24px;font-size:11px;font-weight:600;color:#ccc;letter-spacing:.5px;display:flex;align-items:center;gap:8px;border-right:1px solid #2a2a2a}
+.ticker-item .owner{color:#E8A838;font-weight:700;font-size:10px}
+.ticker-item .score{color:#fff;font-weight:800;font-family:'Playfair Display',serif}
+.ticker-item .status{color:#E8A838;font-size:9px;letter-spacing:1px;font-weight:800}
+.ticker-item .status.live{color:#4ade80}
+.ticker-item .status.final{color:#888}
+.ticker-item .pulse{display:inline-block;width:6px;height:6px;background:#4ade80;border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Header */
+.header{text-align:center;padding:28px 16px 20px;background:linear-gradient(180deg,#0a0a0a 0%,#1A1A1A 100%);position:relative;overflow:hidden}
+.header:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(232,168,56,.08),transparent 70%);pointer-events:none}
+.header h1{font-family:'Playfair Display',serif;font-size:clamp(22px,5vw,36px);color:#fff;font-weight:900;letter-spacing:2px;position:relative}
+.header .sub{font-size:10px;color:#E8A838;letter-spacing:3px;font-weight:700;margin-top:4px;position:relative}
+
+/* Champion banner */
+.champ-banner{background:linear-gradient(135deg,#E8A838 0%,#C8891F 100%);color:#111;padding:14px 16px;text-align:center;font-weight:800;letter-spacing:1px;position:relative;overflow:hidden;border-top:1px solid rgba(0,0,0,.1);border-bottom:1px solid rgba(0,0,0,.1)}
+.champ-banner:before{content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:shine 4s ease-in-out infinite}
+@keyframes shine{0%{left:-100%}50%,100%{left:100%}}
+.champ-banner .crown{font-size:20px;display:inline-block;margin-right:8px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.2))}
+.champ-banner .title{font-size:10px;font-family:'DM Sans',sans-serif;opacity:.75;letter-spacing:2.5px;display:block}
+.champ-banner .name{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;letter-spacing:3px;display:inline-block;margin:2px 0}
+.champ-banner .prize{font-size:11px;font-weight:700;opacity:.9;display:block;margin-top:2px}
+
+/* Layout */
+.content{max-width:720px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:16px;overflow:hidden}
+.card-hd{background:#111;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-hd span{color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px}
+.card-hd .badge{background:#E8A838;color:#111;font-size:9px;font-weight:800;padding:3px 8px;border-radius:3px;letter-spacing:1px}
+.card-hd .badge.live{background:#4ade80;color:#111;display:flex;align-items:center;gap:5px}
+.card-hd .badge.locked{background:#2D2D2D;color:#E8A838;border:1px solid #E8A838}
+.card-hd .live-dot{width:6px;height:6px;background:#111;border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+
+/* Tabs */
+.tabs{display:flex;background:#fff;border-radius:10px;padding:4px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;padding:10px 6px;background:transparent;border:none;font-size:10px;font-weight:700;letter-spacing:1px;color:#888;cursor:pointer;border-radius:6px;transition:all .15s;white-space:nowrap;font-family:inherit}
+.tab.active{background:#111;color:#fff}
+
+/* Tables */
+table{width:100%;border-collapse:collapse}
+th{background:#F5F3EE;font-size:9px;font-weight:700;letter-spacing:1px;color:#666;padding:10px 8px;text-align:center;border-bottom:1px solid #E8E4DC}
+td{padding:10px 8px;font-size:13px;text-align:center;border-bottom:1px solid #F5F3EE;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.mgr-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;text-align:left!important;letter-spacing:.5px}
+.wins-cell{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#111}
+.wins-cell.lead{color:#E8A838}
+.rank-cell{font-family:'Playfair Display',serif;font-size:20px;font-weight:900}
+.rank-cell.gold{color:#E8A838}
+.gb-cell{font-size:11px;color:#999;font-weight:600}
+
+/* Team logos */
+.logo{width:28px;height:28px;border-radius:50%;vertical-align:middle;display:inline-block}
+.logo.sm{width:22px;height:22px}
+.logo.md{width:32px;height:32px}
+.logo.lg{width:44px;height:44px}
+.team-row{display:flex;align-items:center;gap:8px;text-align:left}
+.team-row .name{font-weight:600;font-size:13px}
+.team-row.elim .name{text-decoration:line-through;color:#999}
+.team-row.elim .logo{opacity:.4;filter:grayscale(100%)}
+
+/* Playoff bracket */
+.bracket{display:grid;grid-template-columns:1fr;gap:12px;padding:16px}
+.conf-label{font-size:10px;font-weight:800;letter-spacing:2px;color:#E8A838;text-align:center;margin:6px 0 2px;padding-top:8px;border-top:1px solid #F0EDE5}
+.conf-label:first-child{border-top:none;padding-top:0}
+.series{background:#FAF9F5;border-radius:8px;padding:12px;border:1px solid #EDE8DC}
+.series.final{opacity:.65}
+.series-hd{display:flex;justify-content:space-between;align-items:center;font-size:9px;font-weight:700;letter-spacing:1px;color:#888;margin-bottom:10px}
+.series-hd .seed-tag{background:#111;color:#fff;padding:2px 6px;border-radius:3px;font-size:9px;letter-spacing:.5px}
+.series-hd .status-live{color:#4ade80;display:flex;align-items:center;gap:4px}
+.series-hd .status-live .dot{width:5px;height:5px;background:#4ade80;border-radius:50%;animation:pulse 1.5s infinite}
+.series-hd .status-done{color:#888}
+.series-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.series-row .left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.series-row .seed{font-family:'Playfair Display',serif;font-size:14px;font-weight:800;color:#999;width:18px;text-align:center}
+.series-row .team-info{flex:1;min-width:0}
+.series-row .team-info .name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.series-row .team-info .owner{font-size:9px;color:#E8A838;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
+.series-row .wins{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;min-width:28px;text-align:center}
+.series-row.eliminated .name{text-decoration:line-through;color:#aaa}
+.series-row.eliminated .logo{opacity:.35;filter:grayscale(100%)}
+.series-row.advanced .wins{color:#16a34a}
+.series-row.advanced .seed{color:#16a34a}
+.vs-divider{text-align:center;font-size:9px;color:#bbb;letter-spacing:2px;padding:2px 0;font-weight:700}
+
+/* Manager playoff tracker */
+.mgr-tracker{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
+.mgr-card{background:#FAF9F5;border:1px solid #EDE8DC;border-radius:8px;padding:12px;text-align:center;position:relative}
+.mgr-card.leader{background:linear-gradient(135deg,#FFF9E6 0%,#FFFDF5 100%);border-color:#E8A838}
+.mgr-card .mgr{font-family:'Playfair Display',serif;font-size:16px;font-weight:800;margin-bottom:4px}
+.mgr-card .count{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#111;line-height:1}
+.mgr-card.leader .count{color:#E8A838}
+.mgr-card .label{font-size:9px;color:#888;letter-spacing:1px;margin-top:2px;font-weight:700}
+.mgr-card .teams{margin-top:8px;display:flex;justify-content:center;gap:3px;flex-wrap:wrap}
+.mgr-card .teams .logo{width:18px;height:18px}
+
+/* Matchup cards */
+.matchup-grid{padding:12px;display:grid;grid-template-columns:1fr;gap:8px}
+.matchup-card{background:#FAF9F5;border-radius:8px;padding:12px;border:1px solid #EDE8DC}
+.matchup-card.live{border-color:#4ade80;background:linear-gradient(135deg,#F0FFF4 0%,#FAFFF7 100%)}
+.matchup-card.final{opacity:.75}
+.matchup-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:9px;font-weight:700;letter-spacing:1px;color:#888}
+.matchup-hd .game-tag{background:#111;color:#fff;padding:2px 6px;border-radius:3px;font-size:9px}
+.matchup-hd .status{color:#4ade80}
+.matchup-hd .status.final{color:#888}
+.matchup-teams{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.matchup-team{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.matchup-team.right{flex-direction:row-reverse;text-align:right}
+.matchup-team .info .name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.matchup-team .info .owner{font-size:9px;color:#E8A838;font-weight:700;letter-spacing:.5px}
+.matchup-score{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;min-width:36px;text-align:center}
+
+/* Footer */
+.footer{text-align:center;font-size:10px;color:#999;padding:20px;letter-spacing:1px;font-weight:600}
+
+/* Empty state */
+.empty{padding:32px 16px;text-align:center;color:#999;font-size:12px}
+
+/* Playoff status tags (used in Standings and All Teams) */
+.playoff-tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:9px;font-weight:800;letter-spacing:.5px}
+.playoff-tag.in{background:#E6F7EE;color:#16a34a}
+.playoff-tag.elim{background:#F3F3F3;color:#999}
+.playoff-tag.advanced{background:#16a34a;color:#fff}
+
+.mgr-tag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:9px;font-weight:800;letter-spacing:.5px;background:#111;color:#E8A838}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script>
+var LOGOS={"76ers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23006BB6%27%20stroke%3D%27%23006BB6%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23ED174C%27%3EPHI%3C%2Ftext%3E%3C%2Fsvg%3E","Bucks":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%2300471B%27%20stroke%3D%27%2300471B%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23EEE1C6%27%3EMIL%3C%2Ftext%3E%3C%2Fsvg%3E","Bulls":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23CE1141%27%20stroke%3D%27%23CE1141%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23000000%27%3ECHI%3C%2Ftext%3E%3C%2Fsvg%3E","Cavaliers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23860038%27%20stroke%3D%27%23860038%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FDBB30%27%3ECLE%3C%2Ftext%3E%3C%2Fsvg%3E","Celtics":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23007A33%27%20stroke%3D%27%23007A33%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFFFFF%27%3EBOS%3C%2Ftext%3E%3C%2Fsvg%3E","Clippers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23C8102E%27%20stroke%3D%27%23C8102E%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%231D428A%27%3ELAC%3C%2Ftext%3E%3C%2Fsvg%3E","Grizzlies":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%235D76A9%27%20stroke%3D%27%235D76A9%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%2312173F%27%3EMEM%3C%2Ftext%3E%3C%2Fsvg%3E","Hawks":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23E03A3E%27%20stroke%3D%27%23E03A3E%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23C1D32F%27%3EATL%3C%2Ftext%3E%3C%2Fsvg%3E","Heat":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%2398002E%27%20stroke%3D%27%2398002E%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23F9A01B%27%3EMIA%3C%2Ftext%3E%3C%2Fsvg%3E","Hornets":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%231D1160%27%20stroke%3D%27%231D1160%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%2300788C%27%3ECHA%3C%2Ftext%3E%3C%2Fsvg%3E","Jazz":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23002B5C%27%20stroke%3D%27%23002B5C%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23F9A01B%27%3EUTA%3C%2Ftext%3E%3C%2Fsvg%3E","Kings":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%235A2D81%27%20stroke%3D%27%235A2D81%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%2363727A%27%3ESAC%3C%2Ftext%3E%3C%2Fsvg%3E","Knicks":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23006BB6%27%20stroke%3D%27%23006BB6%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23F58426%27%3ENYK%3C%2Ftext%3E%3C%2Fsvg%3E","Lakers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23552583%27%20stroke%3D%27%23552583%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FDB927%27%3ELAL%3C%2Ftext%3E%3C%2Fsvg%3E","Magic":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%230077C0%27%20stroke%3D%27%230077C0%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFFFFF%27%3EORL%3C%2Ftext%3E%3C%2Fsvg%3E","Mavericks":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%2300538C%27%20stroke%3D%27%2300538C%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFFFFF%27%3EDAL%3C%2Ftext%3E%3C%2Fsvg%3E","Nets":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23000000%27%20stroke%3D%27%23000000%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFFFFF%27%3EBKN%3C%2Ftext%3E%3C%2Fsvg%3E","Nuggets":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%230E2240%27%20stroke%3D%27%230E2240%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FEC524%27%3EDEN%3C%2Ftext%3E%3C%2Fsvg%3E","Pacers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23002D62%27%20stroke%3D%27%23002D62%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FDBB30%27%3EIND%3C%2Ftext%3E%3C%2Fsvg%3E","Pelicans":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%230C2340%27%20stroke%3D%27%230C2340%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23C8102E%27%3ENOP%3C%2Ftext%3E%3C%2Fsvg%3E","Pistons":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23C8102E%27%20stroke%3D%27%23C8102E%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%231D42BA%27%3EDET%3C%2Ftext%3E%3C%2Fsvg%3E","Raptors":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23CE1141%27%20stroke%3D%27%23CE1141%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23000000%27%3ETOR%3C%2Ftext%3E%3C%2Fsvg%3E","Rockets":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23CE1141%27%20stroke%3D%27%23CE1141%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFFFFF%27%3EHOU%3C%2Ftext%3E%3C%2Fsvg%3E","Spurs":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23000000%27%20stroke%3D%27%23000000%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23C4CED4%27%3ESAS%3C%2Ftext%3E%3C%2Fsvg%3E","Suns":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%231D1160%27%20stroke%3D%27%231D1160%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23E56020%27%3EPHX%3C%2Ftext%3E%3C%2Fsvg%3E","Thunder":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23007AC1%27%20stroke%3D%27%23007AC1%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23EF6100%27%3EOKC%3C%2Ftext%3E%3C%2Fsvg%3E","Timberwolves":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%230C2340%27%20stroke%3D%27%230C2340%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%2378BE20%27%3EMIN%3C%2Ftext%3E%3C%2Fsvg%3E","Trail Blazers":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23E03A3E%27%20stroke%3D%27%23E03A3E%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23000000%27%3EPOR%3C%2Ftext%3E%3C%2Fsvg%3E","Warriors":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%231D428A%27%20stroke%3D%27%231D428A%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23FFC72C%27%3EGSW%3C%2Ftext%3E%3C%2Fsvg%3E","Wizards":"data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2740%27%20height%3D%2740%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2719%27%20fill%3D%27%23002B5C%27%20stroke%3D%27%23002B5C%27%20stroke-width%3D%271%27%2F%3E%3Ctext%20x%3D%2720%27%20y%3D%2721%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27central%27%20font-family%3D%27Arial%2Csans-serif%27%20font-weight%3D%27800%27%20font-size%3D%2711%27%20fill%3D%27%23E31837%27%3EWAS%3C%2Ftext%3E%3C%2Fsvg%3E"};
+
+// Name mapping: ESPN display names -> our short names
+var NAME_MAP = {
+  "Atlanta Hawks":"Hawks","Boston Celtics":"Celtics","Brooklyn Nets":"Nets",
+  "Charlotte Hornets":"Hornets","Chicago Bulls":"Bulls","Cleveland Cavaliers":"Cavaliers",
+  "Dallas Mavericks":"Mavericks","Denver Nuggets":"Nuggets","Detroit Pistons":"Pistons",
+  "Golden State Warriors":"Warriors","Houston Rockets":"Rockets","Indiana Pacers":"Pacers",
+  "LA Clippers":"Clippers","Los Angeles Clippers":"Clippers","Los Angeles Lakers":"Lakers",
+  "Memphis Grizzlies":"Grizzlies","Miami Heat":"Heat","Milwaukee Bucks":"Bucks",
+  "Minnesota Timberwolves":"Timberwolves","New Orleans Pelicans":"Pelicans","New York Knicks":"Knicks",
+  "Oklahoma City Thunder":"Thunder","Orlando Magic":"Magic","Philadelphia 76ers":"76ers",
+  "Phoenix Suns":"Suns","Portland Trail Blazers":"Trail Blazers","Sacramento Kings":"Kings",
+  "San Antonio Spurs":"Spurs","Toronto Raptors":"Raptors","Utah Jazz":"Jazz",
+  "Washington Wizards":"Wizards"
+};
+
+// Reverse map: short -> ESPN abbr for scoreboard matching
+var ABBR_MAP = {
+  "Hawks":"ATL","Celtics":"BOS","Nets":"BKN","Hornets":"CHA","Bulls":"CHI","Cavaliers":"CLE",
+  "Mavericks":"DAL","Nuggets":"DEN","Pistons":"DET","Warriors":"GS","Rockets":"HOU","Pacers":"IND",
+  "Clippers":"LAC","Lakers":"LAL","Grizzlies":"MEM","Heat":"MIA","Bucks":"MIL","Timberwolves":"MIN",
+  "Pelicans":"NO","Knicks":"NY","Thunder":"OKC","Magic":"ORL","76ers":"PHI","Suns":"PHX",
+  "Trail Blazers":"POR","Kings":"SAC","Spurs":"SA","Raptors":"TOR","Jazz":"UTAH","Wizards":"WSH"
+};
+
+// FINAL 2025-26 Regular Season Records (LOCKED)
+var FINAL_RECORDS = {
+  "Thunder":{w:64,l:18},"Spurs":{w:62,l:20},"Pistons":{w:60,l:22},"Celtics":{w:56,l:26},
+  "Nuggets":{w:54,l:28},"Lakers":{w:53,l:29},"Knicks":{w:53,l:29},"Cavaliers":{w:52,l:30},
+  "Rockets":{w:52,l:30},"Timberwolves":{w:49,l:33},"Hawks":{w:46,l:36},"Raptors":{w:46,l:36},
+  "Magic":{w:45,l:37},"76ers":{w:45,l:37},"Suns":{w:45,l:37},"Hornets":{w:44,l:38},
+  "Heat":{w:43,l:39},"Clippers":{w:42,l:40},"Trail Blazers":{w:42,l:40},"Warriors":{w:37,l:45},
+  "Bucks":{w:32,l:50},"Bulls":{w:31,l:51},"Pelicans":{w:26,l:56},"Mavericks":{w:26,l:56},
+  "Grizzlies":{w:25,l:57},"Jazz":{w:22,l:60},"Kings":{w:22,l:60},"Nets":{w:20,l:62},
+  "Pacers":{w:19,l:63},"Wizards":{w:17,l:65}
+};
+
+// 2025-26 Rosters
+var ROSTERS = {
+  "Gainzy": ["Thunder","Timberwolves","Magic","Pistons","Grizzlies","Kings","Suns"],
+  "Rippe":  ["Nuggets","Clippers","Spurs","Bucks","Celtics","Bulls","Pelicans"],
+  "Swaggy": ["Cavaliers","Lakers","Warriors","76ers","Heat","Pacers","Nets"],
+  "G$":     ["Knicks","Rockets","Hawks","Mavericks","Raptors","Trail Blazers","Hornets"]
+};
+
+// Team -> Owner map
+var OWNER_MAP = {};
+Object.keys(ROSTERS).forEach(function(mgr){
+  ROSTERS[mgr].forEach(function(t){ OWNER_MAP[t] = mgr; });
+});
+OWNER_MAP["Jazz"] = "Undrafted";
+OWNER_MAP["Wizards"] = "Undrafted";
+
+// Playoff bracket structure — First Round
+// Status for each game: we'll look up live scores from ESPN scoreboard,
+// but seed games + known results are baked in
+var PLAYOFF_BRACKET = {
+  east: [
+    { hi:"Pistons",hiSeed:1, lo:"Magic",loSeed:8 },
+    { hi:"Celtics",hiSeed:2, lo:"76ers",loSeed:7 },
+    { hi:"Knicks", hiSeed:3, lo:"Hawks",loSeed:6 },
+    { hi:"Cavaliers",hiSeed:4, lo:"Raptors",loSeed:5 }
+  ],
+  west: [
+    { hi:"Thunder",hiSeed:1, lo:"Suns",loSeed:8 },
+    { hi:"Spurs",hiSeed:2, lo:"Trail Blazers",loSeed:7 },
+    { hi:"Nuggets",hiSeed:3, lo:"Timberwolves",loSeed:6 },
+    { hi:"Lakers",hiSeed:4, lo:"Rockets",loSeed:5 }
+  ]
+};
+
+// Play-in eliminated teams (already done)
+var PLAYIN_ELIMINATED = ["Heat","Hornets","Clippers","Warriors"];
+
+// Missed postseason entirely
+var MISSED_POSTSEASON = ["Bucks","Bulls","Pacers","Nets","Wizards","Mavericks","Pelicans","Grizzlies","Kings","Jazz"];
+
+// All 16 playoff teams
+var PLAYOFF_TEAMS = [];
+PLAYOFF_BRACKET.east.forEach(function(m){ PLAYOFF_TEAMS.push(m.hi, m.lo); });
+PLAYOFF_BRACKET.west.forEach(function(m){ PLAYOFF_TEAMS.push(m.hi, m.lo); });
+
+// 2024-25 History
+var HIST = {
+  rosters: [
+    {name:"Rippe",   w:326, teams:["Thunder","Timberwolves","Cavaliers","Grizzlies","Pacers","Raptors","Jazz"]},
+    {name:"G$",      w:302, teams:["Celtics","Bucks","Lakers","Warriors","Kings","Hornets","Nets"]},
+    {name:"Gainzy",  w:288, teams:["Knicks","Mavericks","Magic","Pelicans","Rockets","Clippers","Pistons"]},
+    {name:"Swaggy",  w:269, teams:["Nuggets","76ers","Suns","Heat","Spurs","Hawks","Bulls"]}
+  ],
+  cup:"Bucks (G$)", cupLoser:"Thunder (Rippe)", cupMVP:"Giannis",
+  finals:"Thunder (Rippe)", finalsLoser:"Pacers (Rippe)", finalsMVP:"SGA"
+};
+</script>
+
+<script type="text/babel">
+var useState = React.useState;
+var useEffect = React.useEffect;
+
+// ============ HELPERS ============
+function TeamLogo(props){
+  var src = LOGOS[props.name];
+  var cls = "logo" + (props.size ? " " + props.size : "");
+  if(!src) return <div className={cls} style={{background:"#ddd"}}></div>;
+  return <img src={src} alt={props.name} className={cls}/>;
+}
+
+function OwnerTag(props){
+  var o = OWNER_MAP[props.team] || "Undrafted";
+  return <span className="mgr-tag">{o}</span>;
+}
+
+// ============ MAIN APP ============
+function App(){
+  var [tab, setTab] = useState("standings");
+  var [liveGames, setLiveGames] = useState([]);
+  var [seriesState, setSeriesState] = useState(null); // {seriesKey:{hiWins,loWins,status}}
+  var [lastUpdate, setLastUpdate] = useState(null);
+  var [loading, setLoading] = useState(true);
+
+  // Fetch scoreboard — picks up any playoff games happening today/recently
+  function fetchScoreboard(){
+    return fetch("https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard")
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var games = [];
+        if(data && data.events){
+          data.events.forEach(function(ev){
+            var comp = ev.competitions && ev.competitions[0];
+            if(!comp) return;
+            var home=null, away=null;
+            (comp.competitors||[]).forEach(function(c){
+              var shortName = NAME_MAP[c.team.displayName] || c.team.displayName;
+              var obj = {
+                team: shortName,
+                score: parseInt(c.score) || 0,
+                homeAway: c.homeAway
+              };
+              if(c.homeAway === "home") home = obj;
+              else away = obj;
+            });
+            if(home && away){
+              var st = ev.status && ev.status.type;
+              games.push({
+                id: ev.id,
+                home: home,
+                away: away,
+                state: st ? st.state : "pre",     // "pre","in","post"
+                detail: st ? st.shortDetail : "",
+                completed: st ? st.completed : false
+              });
+            }
+          });
+        }
+        setLiveGames(games);
+        setLastUpdate(new Date());
+        setLoading(false);
+      })
+      .catch(function(e){ setLoading(false); });
+  }
+
+  useEffect(function(){
+    fetchScoreboard();
+    var interval = setInterval(fetchScoreboard, 30000);
+    return function(){ clearInterval(interval); };
+  }, []);
+
+  // Compute manager totals from FINAL_RECORDS (locked)
+  function managerTotals(){
+    var out = [];
+    Object.keys(ROSTERS).forEach(function(mgr){
+      var total = 0;
+      ROSTERS[mgr].forEach(function(t){
+        if(FINAL_RECORDS[t]) total += FINAL_RECORDS[t].w;
+      });
+      out.push({ name: mgr, wins: total, teams: ROSTERS[mgr] });
+    });
+    out.sort(function(a,b){ return b.wins - a.wins; });
+    return out;
+  }
+
+  // Compute series status from live games + seed data
+  // Maps scoreboard results to series (home/away team match in a series)
+  function computeSeries(){
+    var result = {};
+    var allSeries = PLAYOFF_BRACKET.east.concat(PLAYOFF_BRACKET.west);
+    allSeries.forEach(function(s){
+      var key = s.hi + "_" + s.lo;
+      result[key] = { hiWins: 0, loWins: 0, games: [] };
+    });
+    // Walk through live games — only playoff games count (we filter by teams appearing in bracket)
+    var playoffTeamSet = {};
+    PLAYOFF_TEAMS.forEach(function(t){ playoffTeamSet[t] = true; });
+    liveGames.forEach(function(g){
+      var h = g.home.team, a = g.away.team;
+      if(!playoffTeamSet[h] || !playoffTeamSet[a]) return;
+      // Find the series
+      var matched = null;
+      allSeries.forEach(function(s){
+        if((s.hi===h && s.lo===a) || (s.hi===a && s.lo===h)){
+          matched = s;
+        }
+      });
+      if(!matched) return;
+      var key = matched.hi + "_" + matched.lo;
+      // Only count completed games
+      if(g.completed){
+        var winner = g.home.score > g.away.score ? h : a;
+        if(winner === matched.hi) result[key].hiWins++;
+        else result[key].loWins++;
+      }
+      result[key].games.push(g);
+    });
+    return result;
+  }
+
+  var mgrTotals = managerTotals();
+  var champion = mgrTotals[0];
+  var series = computeSeries();
+
+  // Playoff games for "Today" feed (live or recent)
+  function todaysPlayoffGames(){
+    var playoffSet = {};
+    PLAYOFF_TEAMS.forEach(function(t){ playoffSet[t] = true; });
+    return liveGames.filter(function(g){
+      return playoffSet[g.home.team] && playoffSet[g.away.team];
+    });
+  }
+
+  return (
+    <div>
+      {/* TICKER */}
+      <div className="ticker-wrap">
+        <div className="ticker">
+          {buildTickerItems(liveGames).map(function(item, i){
+            return <div className="ticker-item" key={i}>
+              {item.live && <span className="pulse"></span>}
+              <span className="owner">{item.ownerA}</span>
+              <span>{item.teamA}</span>
+              <span className="score">{item.scoreA}</span>
+              <span style={{color:"#555"}}>—</span>
+              <span className="score">{item.scoreB}</span>
+              <span>{item.teamB}</span>
+              <span className="owner">{item.ownerB}</span>
+              <span className={"status " + item.statusClass}>{item.statusText}</span>
+            </div>;
+          })}
+          {/* Duplicate for infinite scroll */}
+          {buildTickerItems(liveGames).map(function(item, i){
+            return <div className="ticker-item" key={"dup"+i}>
+              {item.live && <span className="pulse"></span>}
+              <span className="owner">{item.ownerA}</span>
+              <span>{item.teamA}</span>
+              <span className="score">{item.scoreA}</span>
+              <span style={{color:"#555"}}>—</span>
+              <span className="score">{item.scoreB}</span>
+              <span>{item.teamB}</span>
+              <span className="owner">{item.ownerB}</span>
+              <span className={"status " + item.statusClass}>{item.statusText}</span>
+            </div>;
+          })}
+        </div>
+      </div>
+
+      {/* HEADER */}
+      <div className="header">
+        <h1>NBA TEAM LEAGUE</h1>
+        <div className="sub">2025–26 SEASON · $300 POOL</div>
+      </div>
+
+      {/* CHAMPION BANNER */}
+      <div className="champ-banner">
+        <span className="title">2025–26 REGULAR SEASON CHAMPION</span>
+        <span className="crown">👑</span>
+        <span className="name">{champion.name.toUpperCase()}</span>
+        <span className="prize">{champion.wins} WINS · $150 PRIZE CLAIMED</span>
+      </div>
+
+      {/* CONTENT */}
+      <div className="content">
+        {/* TABS */}
+        <div className="tabs">
+          <button className={"tab" + (tab==="standings"?" active":"")} onClick={function(){setTab("standings")}}>STANDINGS</button>
+          <button className={"tab" + (tab==="playoffs"?" active":"")} onClick={function(){setTab("playoffs")}}>PLAYOFFS</button>
+          <button className={"tab" + (tab==="today"?" active":"")} onClick={function(){setTab("today")}}>TODAY</button>
+          <button className={"tab" + (tab==="teams"?" active":"")} onClick={function(){setTab("teams")}}>TEAMS</button>
+          <button className={"tab" + (tab==="history"?" active":"")} onClick={function(){setTab("history")}}>'24–25</button>
+        </div>
+
+        {/* ========= STANDINGS TAB ========= */}
+        {tab==="standings" && <div>
+          <div className="card">
+            <div className="card-hd">
+              <span>FINAL STANDINGS</span>
+              <span className="badge locked">🔒 LOCKED</span>
+            </div>
+            <table>
+              <thead><tr><th>#</th><th style={{textAlign:"left"}}>MANAGER</th><th>WINS</th><th>GB</th></tr></thead>
+              <tbody>
+                {mgrTotals.map(function(m, i){
+                  var gb = i === 0 ? "—" : (mgrTotals[0].wins - m.wins);
+                  return <tr key={m.name} style={{background: i===0?"#FFFDF5":"transparent"}}>
+                    <td className={"rank-cell" + (i===0?" gold":"")}>{i+1}</td>
+                    <td className="mgr-name">{m.name}{i===0?" 👑":""}</td>
+                    <td className={"wins-cell" + (i===0?" lead":"")}>{m.wins}</td>
+                    <td className="gb-cell">{gb}</td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="card" style={{padding:"14px 16px"}}>
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:1.5,color:"#666",marginBottom:8}}>SEASON SUMMARY</div>
+            <div style={{fontSize:12,color:"#444",lineHeight:1.7}}>
+              <b>Gainzy</b> takes the regular season by <b>1 game</b> over G$, ending Rippe's title defense.
+              $150 locked. $150 still live — $75 for the NBA Cup and $75 for the team with the last standing playoff horse.
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-hd">
+              <span>PRIZE BOARD</span>
+              <span className="badge">$300 POOL</span>
+            </div>
+            <table>
+              <tbody>
+                <tr>
+                  <td style={{textAlign:"left",fontWeight:700,fontSize:12}}>Regular Season</td>
+                  <td style={{fontWeight:800,color:"#E8A838"}}>Gainzy 👑</td>
+                  <td style={{fontFamily:"'Playfair Display',serif",fontWeight:800,fontSize:16}}>$150</td>
+                </tr>
+                <tr>
+                  <td style={{textAlign:"left",fontWeight:700,fontSize:12}}>NBA Cup</td>
+                  <td style={{color:"#888",fontSize:11}}>Awarded in December</td>
+                  <td style={{fontFamily:"'Playfair Display',serif",fontWeight:800,fontSize:16}}>$75</td>
+                </tr>
+                <tr>
+                  <td style={{textAlign:"left",fontWeight:700,fontSize:12}}>Last Team Standing</td>
+                  <td style={{color:"#4ade80",fontSize:11,fontWeight:700}}>IN PLAY</td>
+                  <td style={{fontFamily:"'Playfair Display',serif",fontWeight:800,fontSize:16}}>$75</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>}
+
+        {/* ========= PLAYOFFS TAB ========= */}
+        {tab==="playoffs" && <div>
+          {/* Manager Playoff Tracker */}
+          <div className="card">
+            <div className="card-hd">
+              <span>TEAMS REMAINING</span>
+              <span className="badge live"><span className="live-dot"></span>LIVE</span>
+            </div>
+            <div className="mgr-tracker">
+              {buildManagerPlayoffCounts().map(function(mc, i){
+                return <div key={mc.name} className={"mgr-card" + (i===0?" leader":"")}>
+                  <div className="mgr">{mc.name}{i===0?" 🏆":""}</div>
+                  <div className="count">{mc.remaining}</div>
+                  <div className="label">OF 7 REMAINING</div>
+                  <div className="teams">
+                    {mc.teams.filter(function(t){ return mc.remainingTeams.indexOf(t) > -1; }).map(function(t){
+                      return <TeamLogo key={t} name={t} size="sm"/>;
+                    })}
+                  </div>
+                </div>;
+              })}
+            </div>
+          </div>
+
+          {/* Bracket */}
+          <div className="card">
+            <div className="card-hd">
+              <span>FIRST ROUND BRACKET</span>
+              <span className="badge live"><span className="live-dot"></span>LIVE</span>
+            </div>
+            <div className="bracket">
+              <div className="conf-label">EASTERN CONFERENCE</div>
+              {PLAYOFF_BRACKET.east.map(function(s){ return renderSeries(s, series); })}
+              <div className="conf-label">WESTERN CONFERENCE</div>
+              {PLAYOFF_BRACKET.west.map(function(s){ return renderSeries(s, series); })}
+            </div>
+          </div>
+
+          {/* Play-in eliminated */}
+          <div className="card">
+            <div className="card-hd">
+              <span>ALREADY OUT</span>
+              <span className="badge">PLAY-IN / MISSED</span>
+            </div>
+            <div style={{padding:12,fontSize:11,color:"#666"}}>
+              <div style={{marginBottom:8,fontWeight:700,fontSize:10,letterSpacing:1,color:"#888"}}>PLAY-IN ELIMINATED</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
+                {PLAYIN_ELIMINATED.map(function(t){
+                  return <div key={t} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:"#F5F3EE",borderRadius:5,opacity:.7}}>
+                    <TeamLogo name={t} size="sm"/>
+                    <span style={{textDecoration:"line-through",fontSize:11,fontWeight:600}}>{t}</span>
+                    <span style={{fontSize:9,color:"#E8A838",fontWeight:700}}>{OWNER_MAP[t]}</span>
+                  </div>;
+                })}
+              </div>
+              <div style={{marginBottom:8,fontWeight:700,fontSize:10,letterSpacing:1,color:"#888"}}>MISSED POSTSEASON</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                {MISSED_POSTSEASON.map(function(t){
+                  return <div key={t} style={{display:"flex",alignItems:"center",gap:5,padding:"4px 8px",background:"#F5F3EE",borderRadius:5,opacity:.5}}>
+                    <TeamLogo name={t} size="sm"/>
+                    <span style={{textDecoration:"line-through",fontSize:11,fontWeight:600}}>{t}</span>
+                    <span style={{fontSize:9,color:"#E8A838",fontWeight:700}}>{OWNER_MAP[t]}</span>
+                  </div>;
+                })}
+              </div>
+            </div>
+          </div>
+        </div>}
+
+        {/* ========= TODAY TAB ========= */}
+        {tab==="today" && <div>
+          <div className="card">
+            <div className="card-hd">
+              <span>PLAYOFF GAMES</span>
+              {loading ? <span className="badge">LOADING...</span> :
+                <span className="badge live"><span className="live-dot"></span>LIVE</span>}
+            </div>
+            {todaysPlayoffGames().length === 0 ? (
+              <div className="empty">No playoff games on the schedule right now. Check back soon.</div>
+            ) : (
+              <div className="matchup-grid">
+                {todaysPlayoffGames().map(function(g){
+                  var isLive = g.state === "in";
+                  var isFinal = g.completed;
+                  return <div key={g.id} className={"matchup-card" + (isLive?" live":"") + (isFinal?" final":"")}>
+                    <div className="matchup-hd">
+                      <span className="game-tag">PLAYOFFS</span>
+                      <span className={"status" + (isFinal?" final":"")}>
+                        {isLive && "● "}{g.detail}
+                      </span>
+                    </div>
+                    <div className="matchup-teams">
+                      <div className="matchup-team">
+                        <TeamLogo name={g.away.team} size="md"/>
+                        <div className="info">
+                          <div className="name">{g.away.team}</div>
+                          <div className="owner">{OWNER_MAP[g.away.team] || ""}</div>
+                        </div>
+                      </div>
+                      <div className="matchup-score">{g.away.score || "—"}</div>
+                      <div style={{color:"#ccc",fontSize:11,fontWeight:700}}>@</div>
+                      <div className="matchup-score">{g.home.score || "—"}</div>
+                      <div className="matchup-team right">
+                        <TeamLogo name={g.home.team} size="md"/>
+                        <div className="info">
+                          <div className="name">{g.home.team}</div>
+                          <div className="owner">{OWNER_MAP[g.home.team] || ""}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>;
+                })}
+              </div>
+            )}
+          </div>
+        </div>}
+
+        {/* ========= TEAMS TAB ========= */}
+        {tab==="teams" && <div>
+          {["Gainzy","G$","Rippe","Swaggy"].map(function(mgr){
+            var teams = ROSTERS[mgr];
+            var total = 0;
+            teams.forEach(function(t){ if(FINAL_RECORDS[t]) total += FINAL_RECORDS[t].w; });
+            return <div key={mgr} className="card">
+              <div className="card-hd">
+                <span>{mgr.toUpperCase()}</span>
+                <span className="badge">{total}W</span>
+              </div>
+              <table>
+                <thead><tr><th style={{textAlign:"left"}}>TEAM</th><th>W</th><th>L</th><th>STATUS</th></tr></thead>
+                <tbody>
+                  {teams.map(function(t){
+                    var r = FINAL_RECORDS[t] || {w:0,l:0};
+                    var inPO = PLAYOFF_TEAMS.indexOf(t) > -1;
+                    var isElim = !inPO;
+                    return <tr key={t}>
+                      <td>
+                        <div className={"team-row" + (isElim?" elim":"")}>
+                          <TeamLogo name={t} size="sm"/>
+                          <span className="name">{t}</span>
+                        </div>
+                      </td>
+                      <td style={{fontWeight:700}}>{r.w}</td>
+                      <td style={{color:"#999"}}>{r.l}</td>
+                      <td>
+                        {inPO ? <span className="playoff-tag in">IN</span> :
+                          <span className="playoff-tag elim">OUT</span>}
+                      </td>
+                    </tr>;
+                  })}
+                </tbody>
+              </table>
+            </div>;
+          })}
+        </div>}
+
+        {/* ========= HISTORY TAB ========= */}
+        {tab==="history" && <div>
+          <div className="card">
+            <div className="card-hd">
+              <span>2024–25 FINAL RESULTS</span>
+              <span className="badge">COMPLETE</span>
+            </div>
+            <table>
+              <thead><tr><th>#</th><th style={{textAlign:"left"}}>MANAGER</th><th>WINS</th></tr></thead>
+              <tbody>
+                {HIST.rosters.map(function(m, i){
+                  return <tr key={m.name} style={{background:i===0?"#FFFDF5":"transparent"}}>
+                    <td className={"rank-cell" + (i===0?" gold":"")}>{i+1}</td>
+                    <td className="mgr-name">{m.name}{i===0?" 👑":""}</td>
+                    <td className={"wins-cell" + (i===0?" lead":"")}>{m.w}</td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="card" style={{padding:16}}>
+            <div style={{fontSize:10,fontWeight:800,letterSpacing:1.5,color:"#666",marginBottom:8}}>AWARDS</div>
+            <div style={{fontSize:12,color:"#444",lineHeight:1.8}}>
+              <b>NBA Cup:</b> {HIST.cup} (def. {HIST.cupLoser}) — MVP: {HIST.cupMVP}<br/>
+              <b>NBA Finals:</b> {HIST.finals} (def. {HIST.finalsLoser}) — MVP: {HIST.finalsMVP}
+            </div>
+          </div>
+        </div>}
+
+        <div className="footer">NBA TEAM LEAGUE 2026 · EST. 2024 · DEFENDING 🏆 GAINZY</div>
+      </div>
+    </div>
+  );
+
+  // ============ INLINE HELPER FUNCTIONS ============
+  function buildTickerItems(games){
+    var playoffSet = {};
+    PLAYOFF_TEAMS.forEach(function(t){ playoffSet[t] = true; });
+    var po = games.filter(function(g){
+      return playoffSet[g.home.team] && playoffSet[g.away.team];
+    });
+    if(po.length === 0){
+      // Show series status summary
+      return PLAYOFF_BRACKET.east.concat(PLAYOFF_BRACKET.west).map(function(s){
+        var key = s.hi + "_" + s.lo;
+        var st = series[key] || {hiWins:0,loWins:0};
+        return {
+          teamA: s.hi, teamB: s.lo,
+          ownerA: OWNER_MAP[s.hi] || "", ownerB: OWNER_MAP[s.lo] || "",
+          scoreA: st.hiWins, scoreB: st.loWins,
+          statusText: "SERIES", statusClass: "",
+          live: false
+        };
+      });
+    }
+    return po.map(function(g){
+      var isLive = g.state === "in";
+      return {
+        teamA: g.away.team, teamB: g.home.team,
+        ownerA: OWNER_MAP[g.away.team] || "",
+        ownerB: OWNER_MAP[g.home.team] || "",
+        scoreA: g.away.score, scoreB: g.home.score,
+        statusText: g.detail || (isLive ? "LIVE" : "FINAL"),
+        statusClass: isLive ? "live" : (g.completed ? "final" : ""),
+        live: isLive
+      };
+    });
+  }
+
+  function buildManagerPlayoffCounts(){
+    var eliminatedSet = {};
+    // Fully eliminated: missed postseason + play-in losers
+    MISSED_POSTSEASON.concat(PLAYIN_ELIMINATED).forEach(function(t){ eliminatedSet[t] = true; });
+    // Plus any series where team has 4 losses
+    Object.keys(series).forEach(function(key){
+      var parts = key.split("_");
+      var hi = parts[0], lo = parts[1];
+      var st = series[key];
+      if(st.hiWins >= 4) eliminatedSet[lo] = true;
+      if(st.loWins >= 4) eliminatedSet[hi] = true;
+    });
+
+    var rows = Object.keys(ROSTERS).map(function(mgr){
+      var teams = ROSTERS[mgr];
+      var remaining = teams.filter(function(t){ return !eliminatedSet[t]; });
+      return { name: mgr, remaining: remaining.length, remainingTeams: remaining, teams: teams };
+    });
+    rows.sort(function(a,b){ return b.remaining - a.remaining; });
+    return rows;
+  }
+
+  function renderSeries(s, series){
+    var key = s.hi + "_" + s.lo;
+    var st = series[key] || { hiWins: 0, loWins: 0 };
+    var hiAdvanced = st.hiWins >= 4;
+    var loAdvanced = st.loWins >= 4;
+    var hiEliminated = loAdvanced;
+    var loEliminated = hiAdvanced;
+    var done = hiAdvanced || loAdvanced;
+
+    var ongoing = (st.hiWins > 0 || st.loWins > 0) && !done;
+    var statusEl = done ? <span className="status-done">FINAL</span> :
+                    ongoing ? <span className="status-live"><span className="dot"></span>IN PROGRESS</span> :
+                    <span style={{color:"#aaa"}}>UPCOMING</span>;
+
+    return <div key={key} className={"series" + (done?" final":"")}>
+      <div className="series-hd">
+        <span className="seed-tag">{s.hiSeed} vs {s.loSeed}</span>
+        {statusEl}
+      </div>
+      <div className={"series-row" + (hiEliminated?" eliminated":"") + (hiAdvanced?" advanced":"")}>
+        <div className="left">
+          <span className="seed">{s.hiSeed}</span>
+          <TeamLogo name={s.hi} size="md"/>
+          <div className="team-info">
+            <div className="name">{s.hi}</div>
+            <div className="owner">{OWNER_MAP[s.hi]}</div>
+          </div>
+        </div>
+        <div className="wins">{st.hiWins}</div>
+      </div>
+      <div className="vs-divider">VS</div>
+      <div className={"series-row" + (loEliminated?" eliminated":"") + (loAdvanced?" advanced":"")}>
+        <div className="left">
+          <span className="seed">{s.loSeed}</span>
+          <TeamLogo name={s.lo} size="md"/>
+          <div className="team-info">
+            <div className="name">{s.lo}</div>
+            <div className="owner">{OWNER_MAP[s.lo]}</div>
+          </div>
+        </div>
+        <div className="wins">{st.loWins}</div>
+      </div>
+    </div>;
+  }
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
